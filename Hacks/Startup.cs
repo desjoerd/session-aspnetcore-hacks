@@ -42,7 +42,7 @@ namespace Hacks
 
             app.Run(async (context) =>
             {
-                await context.Response.WriteAsync("go to -> /swagger");
+                await context.Response.WriteAsync("End of the pipeline, so no route matched, maybe go to -> /swagger");
             });
         }
     }
