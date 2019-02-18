@@ -34,6 +34,22 @@ HealthChecks in ASP.NET Core are ......... [link]
 
 ## JWS Signed Data (200)
 
+JWS stands for Json Web Signature and is distrubuted as a Json Web Token (JWT).
+An json webtoken consists of three parts which are `base64` encoded seperated by an `.`.
+
+- The first part is the header which contains the type of token and the signature/encryption algorithm.
+- The second part is the actual `json` payload which can be encrypted.
+- The last part is the signature
+
+https://jwt.io contains a debugger for json web tokens.
+```
+eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c
+```
+For this workshop we are going to use JWS tokens which is a Json Web Token with a signature. Almost every JWT used for authentication is an JWS, but can also be used to share data between services. Because of the signature the JWS can be used to share data between two (micro)services via an untrusted source (ie an Javascript web client) and cannot be tampered.
+
+### Walktrough
+
+
 ### Challenge
 
 ## NodeServices (300)
