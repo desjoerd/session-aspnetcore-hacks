@@ -60,3 +60,5 @@ For this workshop we are going to use JWS tokens which is a Json Web Token with 
 ## Mediatr (300)
 
 ### Challenge
+
+Add a custom pipeline handler
