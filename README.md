@@ -6,13 +6,12 @@ The start project is always the one provided in this repository which is a *defa
 ## Healthchecks (200)
 HealthChecks in ASP.NET Core are ......... [link]
 
-### Walkthrough
+### Walkthrough `[1 pt]` 
 - Install NuGet Package: AspNetCore.HealthChecks.UI
 
 - In Startup.cs, add the following lines to ConfigureServices method:
     ```csharp
     services.AddHealthChecks()
-        .AddCheck<RandomHealthCheck>("random", tags: new[] { "api", "ui" })
         .AddCheck<AvailableHealthCheck>("available", tags: new[] { "ui" });
     services.AddHealthChecksUI();
     ```
@@ -30,7 +29,9 @@ HealthChecks in ASP.NET Core are ......... [link]
     app.UseHealthChecksUI();
     ```
 
-### Challenge
+### Challenge `[2 pts total]` 
+- `[1 pt]` Add a "Random Health Check" to the health checks page
+- `[1 pt]` Add your own creative Health check, perhaps something Database related?
 
 ## JWS Signed Data (200)
 
