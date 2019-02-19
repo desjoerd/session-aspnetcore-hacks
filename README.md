@@ -125,7 +125,7 @@ public DashboardController(
 
 Well fear no more, because the Mediator Pattern comes to the Rescue!
 
-    “A mediator is an object that makes decisions on how and when objects interact with each other. It encapsulates the 'how' and coordinates execution based on state, the way it’s invoked or the payload you provide to it.”
+> A mediator is an object that makes decisions on how and when objects interact with each other. It encapsulates the 'how' and coordinates execution based on state, the way it’s invoked or the payload you provide to it.
 
 MediatR is an open source implementation of the mediator pattern that doesn’t try to do too much and performs no magic. It allows you to compose messages, create and listen for events using synchronous or asynchronous patterns. It helps to reduce coupling and isolate the concerns of requesting the work to be done and creating the handler that dispatches the work.
 
