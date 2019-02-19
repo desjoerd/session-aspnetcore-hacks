@@ -76,8 +76,8 @@ Examples:
 - Now go to http://localhost:5000/healthchecks-ui to review the Health Checks UI
 
 ### Challenge `[3 pts total]` 
-- (200) `[1 pt]` Add a "Random Health Check" to the health checks page
-- (300) `[1 pt]` Add your own creative Health check, perhaps something Database related? Maybe an API?
+- (200) `[1 pt]` Add a Health Check that randomly changes status to the health checks page
+- (300) `[1 pt]` Add your own creative real-world scenario health check, perhaps a database check? Maybe an API?
 - (300) `[1 pt]` Add a web hook to post status updates. For example you can use a Telegram chat
 
 ## JWS Signed Data (200)
@@ -109,6 +109,40 @@ For this workshop we are going to use JWS tokens which is a Json Web Token with 
 
 ## Mediatr (300)
 
+MediatR has two kinds of messages it dispatches:
+- Request/response messages, dispatched to a single handler
+- Notification messages, dispatched to multiple handlers
+
+### Walkthrough `[1 pt]`
+
+- Add the `MediatR.Extensions.Microsoft.DependencyInjection` NuGet package
+
+
+- In Startup.cs, add the following lines to ConfigureServices:
+    ```csharp
+    services.AddMediatR();
+    ```
+
+- Create a message:
+    ```csharp
+    public class CreateAwesomenessCommand : IRequest<bool>
+    {
+        public string AwesomeQuote { get; set; }
+    }
+    ```
+
+- Create the handler:
+    ```csharp
+    public class CreateAwesomenessHandler : IRequestHandler<CreateAwesomenessCommand, bool>
+    {
+        public Task<bool> Handle(CreateAwesomenessCommand request, CancellationToken cancellationToken)
+        {
+            return Task.FromResult(string.IsNullOrEmpty(request.AwesomeQuote));
+        }
+    }
+    ```
+
+
 ### Challenge
 
-Add a custom pipeline handler
+(300) `[1 pt]` Add a custom pipeline handler
