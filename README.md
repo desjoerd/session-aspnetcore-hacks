@@ -4,35 +4,54 @@ For this workshop we've got a couple of hacks for AspNetCore. Each hack has a de
 The start project is always the one provided in this repository which is a *default aspnetcore empty* app with `swashbuckle.aspnetcore` added.
 
 ## Healthchecks (200)
-HealthChecks in ASP.NET Core are ......... [link]
+ASP.NET Core has built in Health Check Middleware and other libraries for reporting the health of your app. These health reports are exposed as HTTP endpoint and they can be configured for different scenarios.
+
+Examples:
+- Basic health probe; check the status of a containerized app
+- Database/EntityFramework probe; Run a query to indicate if the database responds normally
+- Readiness probe; check if an app is functioning but not yet ready to receive requests
+- Liveness probe; check if an app is functioning and responding to requests
+- Metric-based probe; 
 
 ### Walkthrough `[1 pt]` 
-- Install NuGet Package: AspNetCore.HealthChecks.UI
+- Install NuGet Package `AspNetCore.HealthChecks.UI`
 
 - Add a folder HealthChecks to your solution, and create a class named "AvailableHealthCheck"
-- ![][images/healthchecks_1.png]
+    > ![AvailableHealthCheck](images\healthchecks_available.png)
+
+- Let the class implement the IHealthCheck interface:
+    ```csharp
+    public class AvailableHealthCheck : IHealthCheck
+    {
+        public Task<HealthCheckResult> CheckHealthAsync(HealthCheckContext context, CancellationToken cancellationToken = default)
+        {
+            return Task.FromResult(HealthCheckResult.Healthy());
+        }
+    }
+    ```
 
 - In Startup.cs, add the following lines
     - To enable Health Checks in ASP.NET Core, add the following service to the ConfigureServices method:
-    ```c#
+    ```csharp
     services.AddHealthChecks()
         .AddCheck<AvailableHealthCheck>("available", tags: new[] { "ui" });
     ```
     - To enable the User Interface service, add the following:
-    ```c
+    ```csharp
     services.AddHealthChecksUI();
     ```
 
 - In Startup.cs, add the following lines to Configure method:
-    ```
+    ```csharp
     app.UseHealthChecks("/health/api", new HealthCheckOptions()
     {
         Predicate = _ => _.Tags.Contains("api"),
         ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
     });
+    ```
 
 - To enable a standard UI for Health Checks, add the following code to Startup.cs, Configure method:
-    ```
+    ```csharp
     app.UseHealthChecksUI();
     ```
 
