@@ -8,7 +8,7 @@ ASP.NET Core has built in Health Check Middleware and other libraries for report
 
 Examples:
 - Basic health probe; check the status of a deployed app, if it returns HTTP 200 OK
-- Database/EntityFramework probe; Run a query to indicate if the database responds normally
+- Database/EntityFramework probe; run a query to indicate if the database responds normally
 - Readiness probe; check if an app is functioning but not yet ready to receive requests
 - Liveness probe; check if an app is functioning and responding to requests
 - Metric-based probe; check the app memory usage
@@ -17,7 +17,7 @@ Examples:
 - Install NuGet Package `AspNetCore.HealthChecks.UI`
 
 - Add a folder HealthChecks to your solution, and create a class named "AvailableHealthCheck"
-    > ![AvailableHealthCheck](images\healthchecks_available.png)
+    > ![AvailableHealthCheck](images/healthchecks_available.png)
 
 - Let the class implement the IHealthCheck interface:
     ```csharp
