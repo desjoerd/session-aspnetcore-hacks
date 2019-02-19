@@ -109,9 +109,31 @@ For this workshop we are going to use JWS tokens which is a Json Web Token with 
 
 ## Mediatr (300)
 
+How to avoid Dependency Injection Constructor Madness? That is one of many architectural questions one can lose one's mind over. You might recognize constructors like this:
+```csharp
+public DashboardController(
+    ICustomerRepository customerRepository,
+    IOrderService orderService,
+    ICustomerHistoryRepository historyRepository,
+    IOrderRepository orderRepository,
+    IProductRespoitory productRespoitory,
+    IRelatedProductsRepository relatedProductsRepository,
+    ISupportService supportService,
+    ILog logger
+)
+```
+
+Well fear no more, because the Mediator Pattern comes to the Rescue!
+
+    “A mediator is an object that makes decisions on how and when objects interact with each other. It encapsulates the 'how' and coordinates execution based on state, the way it’s invoked or the payload you provide to it.”
+
+MediatR is an open source implementation of the mediator pattern that doesn’t try to do too much and performs no magic. It allows you to compose messages, create and listen for events using synchronous or asynchronous patterns. It helps to reduce coupling and isolate the concerns of requesting the work to be done and creating the handler that dispatches the work.
+
 MediatR has two kinds of messages it dispatches:
 - Request/response messages, dispatched to a single handler
 - Notification messages, dispatched to multiple handlers
+
+For more cool information about MediatR, see [this blogpost](https://blogs.msdn.microsoft.com/cdndevs/2016/01/26/simplifying-development-and-separating-concerns-with-mediatr/) or go to the [official wiki](https://github.com/jbogard/MediatR/wiki).
 
 ### Walkthrough `[1 pt]`
 
