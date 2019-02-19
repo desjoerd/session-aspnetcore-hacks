@@ -71,7 +71,7 @@ Examples:
     }
     ```
 
-- Open a shell in the Hacks folder and run the app with command `dotnet run`. Go to the health probe endpoint to review the result: http://localhost:5000/health/ui
+- Open a shell in the Project folder and run the app with command `dotnet run`. Go to the health probe endpoint to review the result: http://localhost:5000/health/ui
 
 - Now go to http://localhost:5000/healthchecks-ui to review the Health Checks UI
 
@@ -140,12 +140,12 @@ For more cool information about MediatR, see [this blogpost](https://blogs.msdn.
 - Add the `MediatR.Extensions.Microsoft.DependencyInjection` NuGet package
 
 
-- In Startup.cs, add the following lines to ConfigureServices:
+- In Startup.cs, add the following line to ConfigureServices:
     ```csharp
     services.AddMediatR();
     ```
 
-- Create a message:
+- Create a command class:
     ```csharp
     public class CreateAwesomenessCommand : IRequest<bool>
     {
@@ -153,17 +153,43 @@ For more cool information about MediatR, see [this blogpost](https://blogs.msdn.
     }
     ```
 
-- Create the handler:
+- Create the handler for this command:
     ```csharp
     public class CreateAwesomenessHandler : IRequestHandler<CreateAwesomenessCommand, bool>
     {
         public Task<bool> Handle(CreateAwesomenessCommand request, CancellationToken cancellationToken)
         {
-            return Task.FromResult(string.IsNullOrEmpty(request.AwesomeQuote));
+            return Task.FromResult(!string.IsNullOrEmpty(request.AwesomeQuote));
         }
     }
     ```
 
+- In the Controllers folder, add a new API Controller class
+    ```csharp
+    [ApiController]
+    [Route("commands")]
+    public class CommandController : Controller
+    {
+        private readonly IMediator mediator;
+
+        public  CommandController(IMediator mediator)
+        {
+            this.mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
+        }
+        
+        [HttpPost]
+        public async Task<IActionResult> PostAwesomeness(CreateAwesomenessCommand createAwesomenessCommand)
+        {
+            var commandResult = await mediator.Send(createAwesomenessCommand);
+
+            if (commandResult) return Ok();
+            
+            return BadRequest();
+        }
+    }
+    ```
+
+- Open a shell in the Project folder and run the app with command `dotnet run`. Go to http://localhost:5000/swagger and experiment with your new command
 
 ### Challenge
 
