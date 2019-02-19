@@ -71,13 +71,13 @@ Examples:
     }
     ```
 
-- Open a shell in the Hacks folder and run the app with `dotnet run`. Go to the health probe endpoint to review the result: `http://localhost:5000/health/ui`
+- Open a shell in the Hacks folder and run the app with command `dotnet run`. Go to the health probe endpoint to review the result: http://localhost:5000/health/ui
 
-- Now go to `http://localhost:5000/healthchecks-ui` to review the Health Checks UI
+- Now go to http://localhost:5000/healthchecks-ui to review the Health Checks UI
 
 ### Challenge `[2 pts total]` 
 - (200) `[1 pt]` Add a "Random Health Check" to the health checks page
-- (300) `[1 pt]` Add your own creative Health check, perhaps something Database related?
+- (300) `[1 pt]` Add your own creative Health check, perhaps something Database related? Maybe an API?
 - (300) `[1 pt]` Add a web hook to post status updates. For example you can use a Telegram chat
 
 ## JWS Signed Data (200)
