@@ -7,11 +7,11 @@ The start project is always the one provided in this repository which is a *defa
 ASP.NET Core has built in Health Check Middleware and other libraries for reporting the health of your app. These health reports are exposed as HTTP endpoint and they can be configured for different scenarios.
 
 Examples:
-- Basic health probe; check the status of a containerized app
+- Basic health probe; check the status of a deployed app, if it returns HTTP 200 OK
 - Database/EntityFramework probe; Run a query to indicate if the database responds normally
 - Readiness probe; check if an app is functioning but not yet ready to receive requests
 - Liveness probe; check if an app is functioning and responding to requests
-- Metric-based probe; 
+- Metric-based probe; check the app memory usage
 
 ### Walkthrough `[1 pt]` 
 - Install NuGet Package `AspNetCore.HealthChecks.UI`
