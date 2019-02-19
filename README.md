@@ -16,10 +16,10 @@ Examples:
 ### Walkthrough `[1 pt]` 
 - Install NuGet Package `AspNetCore.HealthChecks.UI`
 
-- Add a folder HealthChecks to your solution, and create a class named "AvailableHealthCheck"
+- Add a folder HealthChecks to your solution, and create a class named "AvailableHealthCheck". This class will be our first Health Check implementation.
     > ![AvailableHealthCheck](images/healthchecks_available.png)
 
-- Let the class implement the IHealthCheck interface:
+- Have the class implement the IHealthCheck interface:
     ```csharp
     public class AvailableHealthCheck : IHealthCheck
     {
@@ -43,9 +43,9 @@ Examples:
 
 - In Startup.cs, add the following lines to Configure method:
     ```csharp
-    app.UseHealthChecks("/health/api", new HealthCheckOptions()
+    app.UseHealthChecks("/health/ui", new HealthCheckOptions()
     {
-        Predicate = _ => _.Tags.Contains("api"),
+        Predicate = _ => _.Tags.Contains("ui"),
         ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
     });
     ```
@@ -55,10 +55,30 @@ Examples:
     app.UseHealthChecksUI();
     ```
 
+- Now add a new section to the appsettings.json file with the following contents:
+    ```json
+    {
+        "HealthChecks-UI": {
+            "HealthChecks": [
+                {
+                    "Name": "UI",
+                    "Uri": "http://localhost:5000/health/ui"
+                }
+            ],
+            "EvaluationTimeOnSeconds": 5,
+            "MinimumSecondsBetweenFailureNotifications": 60
+        }
+    }
+    ```
+
+- Open a shell in the Hacks folder and run the app with `dotnet run`. Go to the health probe endpoint to review the result: `http://localhost:5000/health/ui`
+
+- Now go to `http://localhost:5000/healthchecks-ui` to review the Health Checks UI
+
 ### Challenge `[2 pts total]` 
 - (200) `[1 pt]` Add a "Random Health Check" to the health checks page
-    - How to add your own health check class
 - (300) `[1 pt]` Add your own creative Health check, perhaps something Database related?
+- (300) `[1 pt]` Add a web hook to post status updates. For example you can use a Telegram chat
 
 ## JWS Signed Data (200)
 
