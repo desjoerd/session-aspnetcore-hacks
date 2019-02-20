@@ -317,4 +317,4 @@ For more cool information about MediatR, see [this blogpost](https://blogs.msdn.
 
 ### Challenge
 
-(300) `[1 pt]` Add a custom pipeline handler
+(300) `[1 pt]` Add a [custom pipeline behaviour](https://github.com/jbogard/MediatR/wiki/Behaviors) for common infrastructure like logging, validation, transaction management exception handling, etc..
