@@ -98,10 +98,134 @@ eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4
 
 For this workshop we are going to use JWS tokens which is a Json Web Token with a signature. Almost every JWT used for authentication is a JWS, but can also be used to share data between services. Because of the signature the JWS can be used to share data between two (micro)services via an untrusted source (i.e. a Javascript web client) and cannot be tampered.
 
-### Walktrough
+### Walktrough `[2 pt]`
+To create, validate and read Json Web Tokens we can use `Microsoft.IdentityModel.JsonWebTokens.JsonWebTokenHandler` which is found in the nuget package `System.IdentityModel.Tokens.Jwt` so add this nuget package to the project.
 
+Now create a controller (i.e. `ExternalDataController`) in the controllers folder.
+```csharp
+using Microsoft.AspNetCore.Mvc;
+//---
+
+[ApiController]
+[Route("api/[controller]")]
+public class ExternalDataController : Controller
+{
+}
+```
+
+#### Creating a JWT
+Let's start with creating a JWT.
+Create an Controller action called `GetSignedData` to the controller.
+```csharp
+[HttpGet]
+public IActionResult GetSignedData()
+{ return Ok(); }
+```
+
+For creating a JWT we need to specify the
+- secret to sign the JWT
+- algorithm to use
+- payload
+
+Obviously we want some data we want to share with the client which can be read, but can't be changed when sending back to the server. Create a small _DTO_ with some properties (i.e. `KvkDetails`).
+
+We need this data to be converted to a Json string so we can sign it later on using the `JsonWebTokenHandler`.
+
+```csharp
+using Newtonsoft.Json;
+//---
+
+var dataJson = JsonConvert.SerializeObject(yourDtoInstance);
+```
+
+Now let's make sure we can sign the payload with a secret only we know. The simplest security key is a symmetric security key (vs an [asymmetric security key](https://hackernoon.com/symmetric-and-asymmetric-encryption-5122f9ec65b1)) so let's use that. We also need to create `SigningCredentials` which consists of the `SecurityKey` and an algorithm. We are going to use the `HmacSha256` algorithm which can be used for signing with a secret.
+
+```csharp
+using Microsoft.IdentityModel.Tokens;
+//---
+
+var securityKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(Key));
+signingCredentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
+```
+
+The payload of a JWT is based on claims and is a _Json object_. In the [specification](https://tools.ietf.org/html/rfc7519) there are a couple of [default claims/properties](https://tools.ietf.org/html/rfc7519#section-4.1) defined of this _Json object_. You don't have to use these (signing will just work fine), but they will provide you an extra layer of security. They are:
+
+- `iss` Issuer; the instance which issued this token (in this case us)
+- `sub` Subject; the id/uri of the subject which this token describes
+- `aud` Audience; the subject for whom this token is (in this case also us)
+- `exp` Expiration Time; the timestamp(epoch) when this token is expired
+- `nbf` Not before Time; the timestamp(epoch) from when the token can be used
+- `iat` Issued at; the timestamp(epoch) when the token is issued
+
+The `JsonWebTokenHandler` has specific overloads which does the mapping to these claims. Because of the added security (i.e. we don't want a token to be used a years later) we are going to use these standard claims and add our own `data` claim.
+
+Let's create the token and return it in the controller:
+```csharp
+using Microsoft.IdentityModel.JsonWebTokens;
+//---
+
+var jsonWebTokenHandler = new JsonWebTokenHandler();
+var token = jsonWebTokenHandler.CreateToken(new SecurityTokenDescriptor
+{
+    Issuer = "HacksIss",
+    Audience = "HacksAud",
+    Claims = new Dictionary<string, object>
+    {
+        { "data", dataJson }
+    },
+    SigningCredentials = signingCredentials
+});
+
+return Ok(token);
+```
+
+Let's try this now from swagger and verify the generated JWT on https://jwt.io.
+
+#### Reading and validating a JWT
+On a later stage or different (micro)service we can get the data given to the (javascript)client and by validating the signature and the claims when available know that the data hasn't changed and came from a trusted source.
+
+To do that, let's add a new action:
+```csharp
+[HttpPost]
+public IActionResult SubmitSignedData(string token)
+{ Ok() }
+```
+
+For validating a JWT we can use `ValidateToken` of `JsonWebTokenHandler` with `TokenValidationParameters` as parameter.
+
+For this case we want to validate next to the signature, the Issuer and Audience.
+```csharp
+var tokenValidationParameters = new TokenValidationParameters
+{
+    IssuerSigningKey = securityKey, // same as when creating
+    ValidAudience = "HacksAud",
+    ValidIssuer = "HacksIss",
+};
+
+var validationResult = jsonWebTokenHandler.ValidateToken(token, tokenValidationParameters);
+```
+
+To check whether the token is valid use `validationResult.IsValid`.
+```csharp
+if (validationResult.IsValid)
+{
+    return Ok("valid");
+} else {
+    return BadRequest("Invalid token!")
+}
+```
+
+Getting the content of the JWT is really easy (but doesn't do validation):
+```csharp
+var payload = jsonWebTokenHandler.ReadJsonWebToken(token);
+var yourDtoInstance = payload.GetPayloadValue<YourDto>("data");
+```
+
+Now return `yourDtoInstance` instead of `"valid"` and see everything work. Try tampering your JWT, no more F12 developer tools hacking ^^.
 
 ### Challenge
+(300) `[2 pt]` Use an asymmetric key. So create with a private key and validate with a public key.
+(400) `[1 pt]` Try to create a JWT which can be used by `Microsoft.AspNetCore.Authentication.JwtBearer` authentication to authenticate. (Tip, this requires a `sub` claim and some configuration when registering like the `OpenIdConnectConfiguration`)
 
 ## NodeServices (300)
 
