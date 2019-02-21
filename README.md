@@ -22,7 +22,7 @@ Examples:
 ### Walkthrough `[1 pt]` 
 - Install NuGet Package `AspNetCore.HealthChecks.UI`
 
-- Add a folder HealthChecks to your solution, and create a class named "AvailableHealthCheck". This class will be our first Health Check implementation.
+- Add a folder HealthChecks to your project, and create a class named "AvailableHealthCheck". This class will be our first Health Check implementation.
     > ![AvailableHealthCheck](images/healthchecks_available.png)
 
 - Have the class implement the IHealthCheck interface:
