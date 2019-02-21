@@ -230,8 +230,8 @@ var yourDtoInstance = payload.GetPayloadValue<YourDto>("data");
 Now return `yourDtoInstance` instead of `"valid"` and see everything work. Try tampering your JWT, no more F12 developer tools hacking ^^.
 
 ### Challenge
-(300) `[2 pt]` Use an asymmetric key. So create with a private key and validate with a public key.
-(400) `[1 pt]` Try to create a JWT which can be used by `Microsoft.AspNetCore.Authentication.JwtBearer` authentication to authenticate. (Tip, this requires a `sub` claim and some configuration when registering like the `OpenIdConnectConfiguration`)
+- (300) `[2 pt]` Use an asymmetric key. So create with a private key and validate with a public key.
+- (400) `[1 pt]` Try to create a JWT which can be used by `Microsoft.AspNetCore.Authentication.JwtBearer` authentication to authenticate. (Tip, this requires a `sub` claim and some configuration when registering like the `OpenIdConnectConfiguration`)
 
 ## NodeServices (300)
 AspNetCore has the possibility to easily invoke Javascript via Node. Example usages are:
@@ -431,4 +431,4 @@ For more cool information about MediatR, see [this blogpost](https://blogs.msdn.
 
 ### Challenge
 
-(300) `[1 pt]` Add a [custom pipeline behaviour](https://github.com/jbogard/MediatR/wiki/Behaviors) for common infrastructure like logging, validation, transaction management exception handling, etc..
+- (300) `[1 pt]` Add a [custom pipeline behaviour](https://github.com/jbogard/MediatR/wiki/Behaviors) for common infrastructure like logging, validation, transaction management exception handling, etc..
