@@ -246,7 +246,7 @@ module.exports = function (callback, /* your arguments, can be multiple */) {
 };
 ```
 
-### Walkthrough
+### Walkthrough `[1 pt]`
 For this walkthrough we are going to validate an object using a simple javascript file.
 
 Add NodeServices to the `services` in the startup.cs:
