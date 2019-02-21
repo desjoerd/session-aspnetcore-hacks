@@ -135,15 +135,6 @@ For creating a JWT we need to specify the
 
 Obviously we want some data we want to share with the client which can be read, but can't be changed when sending back to the server. Create a small _DTO_ with some properties (i.e. `KvkDetails`).
 
-We need this data to be converted to a Json string so we can sign it later on using the `JsonWebTokenHandler`.
-
-```csharp
-using Newtonsoft.Json;
-//---
-
-var dataJson = JsonConvert.SerializeObject(yourDtoInstance);
-```
-
 Now let's make sure we can sign the payload with a secret only we know. The simplest security key is a symmetric security key (vs an [asymmetric security key](https://hackernoon.com/symmetric-and-asymmetric-encryption-5122f9ec65b1)) so let's use that. We also need to create `SigningCredentials` which consists of the `SecurityKey` and an algorithm. We are going to use the `HmacSha256` algorithm which can be used for signing with a secret.
 
 ```csharp
@@ -177,7 +168,7 @@ var token = jsonWebTokenHandler.CreateToken(new SecurityTokenDescriptor
     Audience = "HacksAud",
     Claims = new Dictionary<string, object>
     {
-        { "data", dataJson }
+        { "data", yourData }
     },
     SigningCredentials = signingCredentials
 });
