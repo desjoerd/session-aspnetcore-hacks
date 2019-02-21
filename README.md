@@ -1,7 +1,13 @@
 # Session aspnetcore hacks
 
-For this workshop we've got a couple of hacks for AspNetCore. Each hack has a detailed walkthrough and a challenge. You can choose which one you want to do.
+For this workshop we've got a couple of hacks for AspNetCore. Each hack has a detailed walkthrough and some challenges. You can choose which one you want to do.
 The start project is always the one provided in this repository which is a *default aspnetcore empty* app with `swashbuckle.aspnetcore` added.
+
+### index
+- [Healtchecks (200)](#Healthchecks%20\(200\))
+- [JWS Signed Data (200)](#JWS%20Signed%20Data%20\(200\))
+- [NodeServices (300)](#NodeServices%20\(300\))
+- [Mediatr (300)](#Mediatr%20\(300\))
 
 ## Healthchecks (200)
 ASP.NET Core has built in Health Check Middleware and other libraries for reporting the health of your app. These health reports are exposed as HTTP endpoint and they can be configured for different scenarios.
@@ -228,8 +234,116 @@ Now return `yourDtoInstance` instead of `"valid"` and see everything work. Try t
 (400) `[1 pt]` Try to create a JWT which can be used by `Microsoft.AspNetCore.Authentication.JwtBearer` authentication to authenticate. (Tip, this requires a `sub` claim and some configuration when registering like the `OpenIdConnectConfiguration`)
 
 ## NodeServices (300)
+AspNetCore has the possibility to easily invoke Javascript via Node. Example usages are:
+- Prerender a javascript component on the server
+- Render markdown to html with a node package
+- Validate objects using javascript to share validations between server and client
 
+To use Node in AspNetCore we can use `NodeServices` which handles Node instances and serializes parameters and return objects to and from a javascript method. The file must be a `commonjs` module (for Node) and you must export a function which has as the first argument a callback for the result to be able to do asynchronous logic in the Javascript:
+```js
+module.exports = function (callback, /* your arguments, can be multiple */) {
+    callback(/* error */ null, /* result */ "working");
+};
+```
+
+### Walkthrough
+For this walkthrough we are going to validate an object using a simple javascript file.
+
+Add NodeServices to the `services` in the startup.cs:
+```csharp
+services.AddNodeServices();
+```
+Add a simple model which we want to validate and store, for example:
+```csharp
+public class JsData
+{
+    public string Name { get; set; }
+    public int Age { get; set; }
+}
+```
+
+And create a _Controller_ with a simple _POST_ Action with the data we want to validate.
+
+```csharp
+[ApiController]
+[Route("jsdata")]
+public class JsDataController : Controller
+{
+    [HttpPost]
+    public async Task<IActionResult> PostJsData(JsData data)
+    {
+        return Ok();
+    }
+}
+```
+
+To invoke javascript we can use `INodeServices`, add a constructor with `INodeServices` as argument.
+
+Now add the logic to invoke Javascript with Node:
+```csharp
+var result = await nodeServices.InvokeAsync<bool>("js/validate.js", data);
+```
+Some remarks on this line are:
+- The `var result` is the result from the callback
+- You need to specify the return type (`bool` in this case) so NodeServices can deserialize the result.
+- It looks for the javascript file relative to the current project root by default
+- You can add as many arguments as you like :)
+
+Finaly, create the `validate.js` file in `/js` or another place (just remember that you need to update the Invoke :P).
+
+If you added the example `JsData` the validate.js could look like this:
+```js
+return function (callback, model) {
+    var valid = !!model.name && model.age >= 18;
+
+    callback(/* error */ null, valid);
+};
+```
+
+Now update the controller to return the result and try it out :).
+```csharp
+if(!result)
+{
+    ModelState.AddModelError("data", "not valid from JS");
+    return BadRequest(ModelState);
+}
+else
+{
+    return Ok();
+}
+```
 ### Challenge
+- (300) `[1 pt]` Also return a detailed error message from the javascript
+- (400) `[3 pt]` Create some client javascipt which uses the same logic.
+
+**TIP** for clientside js use `UMD` which has some checks to make it possible to consume the module with `commonjs`, `AMD` and `globals` in the browser.
+```js
+(function (root, factory) {
+    if (typeof define === 'function' && define.amd) {
+        // AMD. Register as an anonymous module.
+        define([], factory);
+    } else if (typeof module === 'object' && module.exports) {
+        // Node. Does not work with strict CommonJS, but
+        // only CommonJS-like environments that support module.exports,
+        // like Node.
+        module.exports = factory();
+    } else {
+        // Browser globals (root is window)
+        root.globalValidate = factory();
+    }
+}(typeof self !== 'undefined' ? self : this, function () {
+
+    // ################ DO YOUR EXPORTS HERE ############
+    // Just return a value to define the module export.
+    // This example returns an object, but the module
+    // can return a function as the exported value.
+    return function (callback, model) {
+        var valid = !!model.name && model.age >= 18;
+
+        callback(/* error */ null, valid);
+    };
+}));
+```
 
 ## Mediatr (300)
 
