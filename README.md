@@ -284,7 +284,7 @@ Finaly, create the `validate.js` file in `/js` or another place (just remember t
 
 If you added the example `JsData` the validate.js could look like this:
 ```js
-return function (callback, model) {
+module.exports = function (callback, model) {
     var valid = !!model.name && model.age >= 18;
 
     callback(/* error */ null, valid);
