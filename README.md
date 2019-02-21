@@ -104,7 +104,7 @@ eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4
 
 For this workshop we are going to use JWS tokens which is a Json Web Token with a signature. Almost every JWT used for authentication is a JWS, but can also be used to share data between services. Because of the signature the JWS can be used to share data between two (micro)services via an untrusted source (i.e. a Javascript web client) and cannot be tampered.
 
-### Walktrough `[2 pt]`
+### Walkthrough `[2 pt]`
 To create, validate and read Json Web Tokens we can use `Microsoft.IdentityModel.JsonWebTokens.JsonWebTokenHandler` which is found in the nuget package `System.IdentityModel.Tokens.Jwt` so add this nuget package to the project.
 
 Now create a controller (i.e. `ExternalDataController`) in the controllers folder.
