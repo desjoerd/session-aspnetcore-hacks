@@ -4,10 +4,10 @@ For this workshop we've got a couple of hacks for AspNetCore. Each hack has a de
 The start project is always the one provided in this repository which is a *default aspnetcore empty* app with `swashbuckle.aspnetcore` added.
 
 ### index
-- [Healtchecks (200)](#Healthchecks%20\(200\))
-- [JWS Signed Data (200)](#JWS%20Signed%20Data%20\(200\))
-- [NodeServices (300)](#NodeServices%20\(300\))
-- [Mediatr (300)](#Mediatr%20\(300\))
+- [Healtchecks (200)](#Healthchecks-200)
+- [JWS Signed Data (200)](#JWS-Signed-Data-200)
+- [NodeServices (300)](#NodeServices-300)
+- [Mediatr (300)](#Mediatr-300)
 
 ## Healthchecks (200)
 ASP.NET Core has built in Health Check Middleware and other libraries for reporting the health of your app. These health reports are exposed as HTTP endpoint and they can be configured for different scenarios.
